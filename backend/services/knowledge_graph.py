@@ -21,7 +21,7 @@ class KnowledgeGraphService:
         agent_id: str,
         agent_type: str,
         capabilities: List[str],
-        metadata: Dict[str, Any]
+        meta_data: Dict[str, Any]
     ):
         """Create agent node in knowledge graph"""
         try:
@@ -29,7 +29,7 @@ class KnowledgeGraphService:
             MERGE (a:Agent {id: $agent_id})
             SET a.type = $agent_type,
                 a.capabilities = $capabilities,
-                a.metadata = $metadata,
+                a.meta_data = $meta_data,
                 a.created_at = datetime(),
                 a.updated_at = datetime()
             RETURN a
@@ -41,7 +41,7 @@ class KnowledgeGraphService:
                     agent_id=agent_id,
                     agent_type=agent_type,
                     capabilities=capabilities,
-                    metadata=json.dumps(metadata)
+                    meta_data=json.dumps(meta_data)
                 )
             
             logger.info(f"Created agent node: {agent_id}")

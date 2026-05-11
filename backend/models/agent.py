@@ -44,7 +44,7 @@ class Agent(Base):
     description = Column(Text)
     capabilities = Column(JSON, default=list)
     configuration = Column(JSON, default=dict)
-    metadata = Column(JSON, default=dict)
+    meta_data = Column(JSON, default=dict)
     
     # Performance metrics
     tasks_completed = Column(Integer, default=0)
@@ -70,7 +70,7 @@ class AgentBase(BaseModel):
     description: Optional[str] = None
     capabilities: List[str] = Field(default_factory=list)
     configuration: Dict[str, Any] = Field(default_factory=dict)
-    metadata: Dict[str, Any] = Field(default_factory=dict)
+    meta_data: Dict[str, Any] = Field(default_factory=dict, alias="metadata")
 
 
 class AgentCreate(AgentBase):
@@ -84,7 +84,7 @@ class AgentUpdate(BaseModel):
     description: Optional[str] = None
     capabilities: Optional[List[str]] = None
     configuration: Optional[Dict[str, Any]] = None
-    metadata: Optional[Dict[str, Any]] = None
+    meta_data: Optional[Dict[str, Any]] = Field(None, alias="metadata")
     status: Optional[AgentStatus] = None
     is_active: Optional[bool] = None
 

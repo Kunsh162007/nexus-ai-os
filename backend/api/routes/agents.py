@@ -43,7 +43,7 @@ async def create_agent(
             description=agent_data.description,
             capabilities=agent_data.capabilities,
             configuration=agent_data.configuration,
-            metadata=agent_data.metadata,
+            meta_data=agent_data.meta_data,
             status=AgentStatus.IDLE
         )
         
@@ -57,7 +57,7 @@ async def create_agent(
             agent_id=agent_id,
             agent_type=agent_data.type,
             capabilities=agent_data.capabilities,
-            metadata=agent_data.metadata
+            meta_data=agent_data.meta_data
         )
         
         logger.info(f"Created agent: {agent_id}")

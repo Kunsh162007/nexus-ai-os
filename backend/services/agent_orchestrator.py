@@ -33,7 +33,7 @@ class AgentOrchestrator:
         agent_id: str,
         agent_type: AgentType,
         capabilities: List[str],
-        metadata: Dict[str, Any]
+        meta_data: Dict[str, Any]
     ) -> bool:
         """Register an agent in the neural mesh"""
         try:
@@ -42,7 +42,7 @@ class AgentOrchestrator:
                 "type": agent_type,
                 "capabilities": capabilities,
                 "status": AgentStatus.IDLE,
-                "metadata": metadata,
+                "meta_data": meta_data,
                 "current_task": None,
                 "performance_score": 1.0,
                 "specialization_score": {},
@@ -54,7 +54,7 @@ class AgentOrchestrator:
                 agent_id=agent_id,
                 agent_type=agent_type.value,
                 capabilities=capabilities,
-                metadata=metadata
+                meta_data=meta_data
             )
             
             logger.info(f"Agent {agent_id} ({agent_type.value}) registered in neural mesh")
