@@ -307,25 +307,66 @@ function NavItem({ icon, label, active, onClick, collapsed }: any) {
           : 'text-slate-500 hover:text-slate-200'
       }`}
     >
-      <div className={active ? 'text-white' : 'text-slate-400'}>{icon}</div>
-      {!collapsed && <span className="font-medium">{label}</span>}
+      {active && (
+        <motion.div 
+          layoutId="activeNav"
+          className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-indigo-500 shadow-lg shadow-indigo-600/30"
+          initial={false}
+          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        />
+      )}
+      <div className={`relative z-10 transition-transform group-hover:scale-110 ${active ? 'text-white' : 'text-slate-500'}`}>
+        {icon}
+      </div>
+      {!collapsed && (
+        <span className={`relative z-10 font-bold text-sm tracking-tight ${active ? 'opacity-100' : 'opacity-80'}`}>
+          {label}
+        </span>
+      )}
+      {active && !collapsed && (
+        <motion.div 
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          className="absolute right-4 w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_10px_rgba(255,255,255,0.8)] z-10"
+        />
+      )}
     </button>
   );
 }
 
-function StatCard({ label, value, icon, trend }: any) {
+function HeaderMetric({ icon, label, value }: any) {
   return (
-    <div className="glass-card rounded-2xl p-6 border border-slate-800/50">
-      <div className="flex justify-between items-start mb-4">
-        <div className="p-2 bg-slate-900 rounded-lg border border-slate-800">
+    <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-900/50 rounded-xl border border-slate-800/50">
+      <div className="text-indigo-400">{icon}</div>
+      <span className="text-[10px] font-bold text-slate-500">{label}</span>
+      <span className="text-[11px] font-black text-slate-100">{value}</span>
+    </div>
+  );
+}
+
+function StatCard({ label, value, icon, trend, color }: any) {
+  const colors: any = {
+    indigo: 'text-indigo-400 bg-indigo-500/10 border-indigo-500/20',
+    amber: 'text-amber-400 bg-amber-500/10 border-amber-500/20',
+    purple: 'text-purple-400 bg-purple-500/10 border-purple-500/20',
+    emerald: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20'
+  };
+
+  return (
+    <div className="glass-card rounded-3xl p-6 border border-slate-800/40 hover:border-indigo-500/20 transition-all group overflow-hidden relative">
+      <div className="absolute -right-4 -bottom-4 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity rotate-12 group-hover:scale-125 duration-700">
+        {icon}
+      </div>
+      <div className="flex justify-between items-start mb-6">
+        <div className={`p-3 rounded-2xl border ${colors[color]}`}>
           {icon}
         </div>
-        <span className="text-[10px] font-bold text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded-full">
+        <div className={`px-2 py-1 rounded-lg text-[10px] font-black border ${colors[color]}`}>
           {trend}
-        </span>
+        </div>
       </div>
-      <h3 className="text-3xl font-bold mb-1 tracking-tight">{value}</h3>
-      <p className="text-xs text-slate-500 font-medium">{label}</p>
+      <h3 className="text-4xl font-black mb-1 tracking-tighter leading-none">{value}</h3>
+      <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">{label}</p>
     </div>
   );
 }
