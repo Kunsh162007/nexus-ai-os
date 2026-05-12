@@ -14,15 +14,19 @@ import {
   Zap,
   Clock,
   Menu,
-  X
+  X,
+  Cpu,
+  ShieldCheck,
+  Globe,
+  Database
 } from 'lucide-react';
 
 // Mock Data for Demo
 const AGENTS = [
-  { id: '1', name: 'Sales Assistant', type: 'Sales', status: 'online', tasks: 12, performance: 98 },
-  { id: '2', name: 'Legal Analyst', type: 'Legal', status: 'online', tasks: 8, performance: 95 },
-  { id: '3', name: 'Dev Architect', type: 'Engineering', status: 'busy', tasks: 24, performance: 99 },
-  { id: '4', name: 'Market Strategist', type: 'Marketing', status: 'offline', tasks: 0, performance: 92 },
+  { id: '1', name: 'Sales Assistant', type: 'Sales', status: 'online', tasks: 12, performance: 98, color: 'indigo' },
+  { id: '2', name: 'Legal Analyst', type: 'Legal', status: 'online', tasks: 8, performance: 95, color: 'blue' },
+  { id: '3', name: 'Dev Architect', type: 'Engineering', status: 'busy', tasks: 24, performance: 99, color: 'purple' },
+  { id: '4', name: 'Market Strategist', type: 'Marketing', status: 'offline', tasks: 0, performance: 92, color: 'slate' },
 ];
 
 const RECENT_TASKS = [
@@ -36,65 +40,86 @@ export default function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   return (
-    <div className="flex h-screen bg-slate-950 text-slate-100 overflow-hidden">
+    <div className="flex h-screen bg-slate-950 text-slate-100 overflow-hidden font-sans selection:bg-indigo-500/30">
       <div className="aurora"></div>
       
       {/* Sidebar */}
       <motion.aside 
         initial={false}
-        animate={{ width: isSidebarOpen ? 260 : 80 }}
-        className="glass border-r border-slate-800 flex flex-col z-50"
+        animate={{ width: isSidebarOpen ? 280 : 88 }}
+        className="glass border-r border-slate-800/50 flex flex-col z-50 transition-all duration-300"
       >
-        <div className="p-6 flex items-center gap-3">
-          <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
-            <BrainCircuit className="text-white" />
+        <div className="p-6 flex items-center gap-4 mb-4">
+          <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/40 shrink-0">
+            <BrainCircuit className="text-white" size={28} />
           </div>
           {isSidebarOpen && (
-            <motion.h1 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="font-bold text-xl tracking-tight"
+            <motion.div 
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="flex flex-col"
             >
-              NEXUS <span className="text-indigo-400">AI</span>
-            </motion.h1>
+              <h1 className="font-bold text-xl tracking-tight leading-none mb-1">
+                NEXUS <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">OS</span>
+              </h1>
+              <span className="text-[10px] font-bold text-slate-500 tracking-widest uppercase">Neural Mesh v3.0</span>
+            </motion.div>
           )}
         </div>
 
-        <nav className="flex-1 px-4 py-4 space-y-2">
+        <nav className="flex-1 px-4 space-y-2">
           <NavItem 
-            icon={<LayoutDashboard size={20} />} 
-            label="Dashboard" 
+            icon={<LayoutDashboard size={22} />} 
+            label="Neural Hub" 
             active={activeTab === 'dashboard'} 
             onClick={() => setActiveTab('dashboard')}
             collapsed={!isSidebarOpen}
           />
           <NavItem 
-            icon={<Users size={20} />} 
-            label="Agents" 
+            icon={<Users size={22} />} 
+            label="Agent Registry" 
             active={activeTab === 'agents'} 
             onClick={() => setActiveTab('agents')}
             collapsed={!isSidebarOpen}
           />
           <NavItem 
-            icon={<Network size={20} />} 
-            label="Knowledge Graph" 
+            icon={<Network size={22} />} 
+            label="Synaptic Graph" 
             active={activeTab === 'graph'} 
             onClick={() => setActiveTab('graph')}
             collapsed={!isSidebarOpen}
           />
           <NavItem 
-            icon={<Settings size={20} />} 
-            label="Settings" 
+            icon={<Database size={22} />} 
+            label="Vector Memory" 
+            active={activeTab === 'memory'} 
+            onClick={() => setActiveTab('memory')}
+            collapsed={!isSidebarOpen}
+          />
+          <div className="h-px bg-slate-800/50 mx-2 my-6" />
+          <NavItem 
+            icon={<Settings size={22} />} 
+            label="Core Config" 
             active={activeTab === 'settings'} 
             onClick={() => setActiveTab('settings')}
             collapsed={!isSidebarOpen}
           />
         </nav>
 
-        <div className="p-4 border-t border-slate-800">
+        <div className="p-4 mt-auto">
+          <div className={`glass-card p-4 rounded-2xl border border-slate-800/50 overflow-hidden relative group ${!isSidebarOpen && 'hidden'}`}>
+            <div className="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition-opacity">
+              <Zap size={48} className="text-indigo-500" />
+            </div>
+            <p className="text-xs font-bold text-indigo-400 mb-1">PRO PLAN</p>
+            <p className="text-[10px] text-slate-400 mb-3 leading-relaxed">Upgrade for unlimited agent deployment.</p>
+            <button className="w-full py-2 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 rounded-xl text-[10px] font-bold transition-all">
+              UPGRADE NOW
+            </button>
+          </div>
           <button 
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="w-full flex items-center justify-center p-2 hover:bg-slate-800 rounded-lg transition-colors"
+            className="w-full flex items-center justify-center p-3 hover:bg-slate-800/50 text-slate-400 rounded-xl mt-4 transition-colors"
           >
             {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
@@ -102,35 +127,47 @@ export default function App() {
       </motion.aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col overflow-hidden">
+      <main className="flex-1 flex flex-col overflow-hidden relative">
         {/* Header */}
-        <header className="h-20 flex items-center justify-between px-8 glass border-b border-slate-800">
-          <div className="flex items-center gap-4 bg-slate-900/50 px-4 py-2 rounded-xl border border-slate-800">
-            <Search size={18} className="text-slate-400" />
-            <input 
-              type="text" 
-              placeholder="Query the Neural Mesh..." 
-              className="bg-transparent border-none outline-none text-sm w-64"
-            />
+        <header className="h-20 flex items-center justify-between px-8 glass-card border-b border-slate-800/50 z-10">
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-3 bg-slate-900/80 px-4 py-2.5 rounded-2xl border border-slate-800/50 focus-within:border-indigo-500/50 transition-all shadow-inner">
+              <Search size={18} className="text-slate-500" />
+              <input 
+                type="text" 
+                placeholder="Search the Neural Mesh..." 
+                className="bg-transparent border-none outline-none text-sm w-72 placeholder:text-slate-600"
+              />
+            </div>
           </div>
 
           <div className="flex items-center gap-6">
-            <div className="flex items-center gap-2 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full">
-              <div className="pulse-dot"></div>
-              <span className="text-xs font-medium text-emerald-400">SYSTEM OPERATIONAL</span>
+            <div className="hidden xl:flex items-center gap-4">
+              <HeaderMetric icon={<Cpu size={14} />} label="CPU" value="24%" />
+              <HeaderMetric icon={<Activity size={14} />} label="MEM" value="1.2GB" />
+              <HeaderMetric icon={<Globe size={14} />} label="LAT" value="14ms" />
             </div>
-            <button className="relative p-2 hover:bg-slate-800 rounded-lg transition-colors">
-              <Bell size={20} />
-              <span className="absolute top-2 right-2 w-2 h-2 bg-indigo-500 rounded-full"></span>
-            </button>
-            <div className="w-10 h-10 bg-slate-800 rounded-full border border-slate-700 flex items-center justify-center font-bold">
-              K
+            <div className="w-px h-8 bg-slate-800" />
+            <div className="flex items-center gap-3">
+              <button className="relative p-2.5 hover:bg-slate-800/80 rounded-xl transition-all border border-transparent hover:border-slate-700">
+                <Bell size={20} className="text-slate-400" />
+                <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-indigo-500 rounded-full border-2 border-slate-950"></span>
+              </button>
+              <div className="flex items-center gap-3 pl-2">
+                <div className="text-right hidden sm:block">
+                  <p className="text-xs font-bold leading-none">Admin Node</p>
+                  <p className="text-[10px] text-emerald-400 mt-1 uppercase font-bold tracking-tighter">Verified Alpha</p>
+                </div>
+                <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl border border-white/10 flex items-center justify-center font-bold text-white shadow-lg">
+                  K
+                </div>
+              </div>
             </div>
           </div>
         </header>
 
         {/* Dashboard View */}
-        <div className="flex-1 overflow-y-auto p-8">
+        <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">
           <AnimatePresence mode="wait">
             {activeTab === 'dashboard' && (
               <motion.div
@@ -138,57 +175,75 @@ export default function App() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                className="space-y-8"
+                className="max-w-7xl mx-auto space-y-8"
               >
-                {/* Hero Stats */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                  <StatCard label="Active Agents" value="48" icon={<Users className="text-indigo-400" />} trend="+4 this week" />
-                  <StatCard label="Tasks Completed" value="1.2k" icon={<Zap className="text-amber-400" />} trend="+12% vs last month" />
-                  <StatCard label="Knowledge Nodes" value="8.4k" icon={<Network className="text-blue-400" />} trend="82 new relationships" />
-                  <StatCard label="Avg. Efficiency" value="94%" icon={<Activity className="text-emerald-400" />} trend="+2.4% optimized" />
+                <div className="flex flex-col gap-2">
+                  <h2 className="text-4xl font-black tracking-tight">System <span className="text-indigo-400">Overview</span></h2>
+                  <p className="text-slate-400 text-sm">Real-time status of your self-organizing agent mesh.</p>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* Hero Stats */}
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                  <StatCard label="Active Agents" value="48" icon={<Users className="text-indigo-400" />} trend="+4" color="indigo" />
+                  <StatCard label="Tasks/Hour" value="1.2k" icon={<Zap className="text-amber-400" />} trend="+12%" color="amber" />
+                  <StatCard label="Total Nodes" value="8.4k" icon={<Network className="text-purple-400" />} trend="+82" color="purple" />
+                  <StatCard label="System Integrity" value="94%" icon={<ShieldCheck className="text-emerald-400" />} trend="Stable" color="emerald" />
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                   {/* Agents List */}
-                  <div className="lg:col-span-2 glass-card rounded-2xl p-6">
-                    <div className="flex items-center justify-between mb-6">
-                      <h2 className="text-xl font-bold">Self-Organizing Swarm</h2>
-                      <button className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-all shadow-lg shadow-indigo-500/20 text-sm font-medium">
-                        <Plus size={18} /> Deploy Agent
+                  <div className="lg:col-span-8 glass-card rounded-[2.5rem] p-8 border border-slate-800/30">
+                    <div className="flex items-center justify-between mb-8">
+                      <div>
+                        <h2 className="text-2xl font-bold mb-1">Neural Swarm</h2>
+                        <p className="text-xs text-slate-500">Autonomous agents currently active in the mesh.</p>
+                      </div>
+                      <button className="flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl transition-all shadow-xl shadow-indigo-600/30 text-sm font-bold active:scale-95">
+                        <Plus size={20} /> Deploy New Agent
                       </button>
                     </div>
                     
-                    <div className="space-y-4">
+                    <div className="grid gap-4">
                       {AGENTS.map((agent, i) => (
                         <motion.div 
                           key={agent.id}
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: i * 0.1 }}
-                          className="flex items-center justify-between p-4 bg-slate-900/40 border border-slate-800/50 rounded-xl hover:border-indigo-500/30 transition-all group"
+                          className="flex items-center justify-between p-5 bg-slate-900/30 border border-slate-800/40 rounded-3xl hover:bg-indigo-500/[0.03] hover:border-indigo-500/30 transition-all group cursor-pointer"
                         >
-                          <div className="flex items-center gap-4">
-                            <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                              agent.status === 'online' ? 'bg-emerald-500/10 text-emerald-400' : 
-                              agent.status === 'busy' ? 'bg-amber-500/10 text-amber-400' : 'bg-slate-800 text-slate-500'
+                          <div className="flex items-center gap-5">
+                            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg transition-transform group-hover:scale-110 duration-300 ${
+                              agent.status === 'online' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 
+                              agent.status === 'busy' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 
+                              'bg-slate-800 text-slate-500 border border-slate-700'
                             }`}>
-                              <BrainCircuit size={24} />
+                              <BrainCircuit size={28} />
                             </div>
                             <div>
-                              <h3 className="font-semibold">{agent.name}</h3>
-                              <p className="text-xs text-slate-400">{agent.type} Specialist</p>
+                              <h3 className="font-bold text-lg group-hover:text-indigo-400 transition-colors">{agent.name}</h3>
+                              <div className="flex items-center gap-2">
+                                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{agent.type}</span>
+                                <div className="w-1 h-1 rounded-full bg-slate-700" />
+                                <div className="flex items-center gap-1.5">
+                                  <div className={`w-1.5 h-1.5 rounded-full ${agent.status === 'online' ? 'bg-emerald-500' : agent.status === 'busy' ? 'bg-amber-500' : 'bg-slate-500'}`} />
+                                  <span className="text-[10px] font-bold uppercase">{agent.status}</span>
+                                </div>
+                              </div>
                             </div>
                           </div>
-                          <div className="flex items-center gap-8">
-                            <div className="text-center">
-                              <p className="text-xs text-slate-500 mb-1">Tasks</p>
-                              <p className="font-bold">{agent.tasks}</p>
+                          <div className="flex items-center gap-10">
+                            <div className="text-right">
+                              <p className="text-[10px] font-bold text-slate-500 mb-1 uppercase">Tasks</p>
+                              <p className="font-black text-xl">{agent.tasks}</p>
                             </div>
-                            <div className="text-center">
-                              <p className="text-xs text-slate-500 mb-1">Performance</p>
-                              <p className="font-bold text-indigo-400">{agent.performance}%</p>
+                            <div className="text-right">
+                              <p className="text-[10px] font-bold text-slate-500 mb-1 uppercase">Performance</p>
+                              <p className="font-black text-xl text-indigo-400">{agent.performance}%</p>
                             </div>
-                            <ChevronRight size={20} className="text-slate-600 group-hover:text-indigo-400 transition-colors" />
+                            <div className="w-10 h-10 flex items-center justify-center rounded-full border border-slate-800 group-hover:bg-indigo-500 group-hover:border-indigo-500 transition-all">
+                              <ChevronRight size={18} className="group-hover:text-white" />
+                            </div>
                           </div>
                         </motion.div>
                       ))}
@@ -196,33 +251,40 @@ export default function App() {
                   </div>
 
                   {/* Activity Feed */}
-                  <div className="glass-card rounded-2xl p-6">
-                    <h2 className="text-xl font-bold mb-6">Neural Activity</h2>
-                    <div className="space-y-6">
+                  <div className="lg:col-span-4 glass-card rounded-[2.5rem] p-8 border border-slate-800/30">
+                    <div className="flex items-center justify-between mb-8">
+                      <h2 className="text-2xl font-bold">Live Activity</h2>
+                      <div className="px-2 py-1 bg-emerald-500/10 rounded-lg flex items-center gap-2">
+                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                        <span className="text-[10px] font-bold text-emerald-500 uppercase tracking-tighter">Live</span>
+                      </div>
+                    </div>
+                    <div className="space-y-8 relative">
+                      <div className="absolute left-1.5 top-2 bottom-2 w-0.5 bg-slate-800/50" />
                       {RECENT_TASKS.map((task) => (
-                        <div key={task.id} className="relative pl-6 border-l border-slate-800 last:border-0 pb-6 last:pb-0">
-                          <div className={`absolute top-0 left-[-4px] w-2 h-2 rounded-full ${
-                            task.status === 'completed' ? 'bg-emerald-500' : 
-                            task.status === 'processing' ? 'bg-amber-500' : 'bg-slate-600'
-                          }`}></div>
+                        <div key={task.id} className="relative pl-8">
+                          <div className={`absolute top-1.5 left-0 w-3 h-3 rounded-full border-2 border-slate-950 z-10 ${
+                            task.status === 'completed' ? 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]' : 
+                            task.status === 'processing' ? 'bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)]' : 'bg-slate-700'
+                          }`} />
                           <div className="flex justify-between items-start mb-1">
-                            <h4 className="text-sm font-semibold">{task.title}</h4>
-                            <span className="text-[10px] text-slate-500">{task.time}</span>
+                            <h4 className="text-sm font-bold tracking-tight">{task.title}</h4>
+                            <span className="text-[10px] font-bold text-slate-500 font-mono">{task.time}</span>
                           </div>
-                          <p className="text-xs text-slate-400 mb-2">Assigned to <span className="text-indigo-400">{task.agent}</span></p>
-                          <div className="flex items-center gap-2">
-                            <span className={`text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider font-bold ${
-                              task.status === 'completed' ? 'bg-emerald-500/10 text-emerald-400' : 
-                              task.status === 'processing' ? 'bg-amber-500/10 text-amber-400' : 'bg-slate-800 text-slate-500'
-                            }`}>
-                              {task.status}
-                            </span>
+                          <p className="text-[11px] text-slate-400 mb-3">
+                            Delegated to <span className="text-indigo-400 font-bold">{task.agent}</span>
+                          </p>
+                          <div className={`inline-flex items-center px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest ${
+                            task.status === 'completed' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/10' : 
+                            task.status === 'processing' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/10' : 'bg-slate-800 text-slate-500'
+                          }`}>
+                            {task.status}
                           </div>
                         </div>
                       ))}
                     </div>
-                    <button className="w-full mt-6 py-2 text-sm text-slate-400 hover:text-indigo-400 transition-colors flex items-center justify-center gap-2">
-                      <Clock size={16} /> View All History
+                    <button className="w-full mt-10 py-4 text-xs font-bold text-slate-500 hover:text-indigo-400 hover:bg-indigo-400/5 border border-slate-800 rounded-2xl transition-all flex items-center justify-center gap-3 active:scale-95">
+                      <Clock size={16} /> VIEW AUDIT LOG
                     </button>
                   </div>
                 </div>
@@ -239,10 +301,10 @@ function NavItem({ icon, label, active, onClick, collapsed }: any) {
   return (
     <button 
       onClick={onClick}
-      className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 ${
+      className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 relative group overflow-hidden ${
         active 
-          ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' 
-          : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-100'
+          ? 'text-white' 
+          : 'text-slate-500 hover:text-slate-200'
       }`}
     >
       <div className={active ? 'text-white' : 'text-slate-400'}>{icon}</div>
