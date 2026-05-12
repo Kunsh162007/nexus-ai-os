@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   LayoutDashboard, 
@@ -199,7 +199,7 @@ export default function App() {
                   <div className="glass-card rounded-2xl p-6">
                     <h2 className="text-xl font-bold mb-6">Neural Activity</h2>
                     <div className="space-y-6">
-                      {RECENT_TASKS.map((task, i) => (
+                      {RECENT_TASKS.map((task) => (
                         <div key={task.id} className="relative pl-6 border-l border-slate-800 last:border-0 pb-6 last:pb-0">
                           <div className={`absolute top-0 left-[-4px] w-2 h-2 rounded-full ${
                             task.status === 'completed' ? 'bg-emerald-500' : 
