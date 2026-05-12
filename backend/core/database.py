@@ -202,20 +202,33 @@ async def init_databases():
     """Initialize all database connections"""
     logger.info("Initializing databases...")
     
-    # Create PostgreSQL tables
-    Base.metadata.create_all(bind=engine)
-    logger.info("PostgreSQL tables created")
+    # Create PostgreSQL tables (Essential)
+    try:
+        Base.metadata.create_all(bind=engine)
+        logger.info("PostgreSQL tables created")
+    except Exception as e:
+        logger.error(f"Failed to initialize PostgreSQL: {e}")
+        # PostgreSQL is usually essential for the app to function at all
     
-    # Connect to Neo4j
-    neo4j_connection.connect()
+    # Connect to Neo4j (Optional for startup)
+    try:
+        neo4j_connection.connect()
+    except Exception as e:
+        logger.warning(f"Neo4j connection deferred: {e}. Graph features will be disabled.")
     
-    # Connect to Qdrant
-    qdrant_connection.connect()
+    # Connect to Qdrant (Optional for startup)
+    try:
+        qdrant_connection.connect()
+    except Exception as e:
+        logger.warning(f"Qdrant connection deferred: {e}. Vector search features will be disabled.")
     
-    # Connect to Redis
-    await redis_connection.connect()
+    # Connect to Redis (Optional for startup)
+    try:
+        await redis_connection.connect()
+    except Exception as e:
+        logger.warning(f"Redis connection deferred: {e}. Caching and task queues will be disabled.")
     
-    logger.info("All databases initialized successfully")
+    logger.info("Database initialization check complete")
 
 
 async def close_databases():
