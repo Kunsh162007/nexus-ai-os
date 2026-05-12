@@ -18,7 +18,7 @@ class Settings(BaseSettings):
     
     # API Configuration
     API_V1_PREFIX: str = "/api/v1"
-    CORS_ORIGINS: Any = ["http://localhost:3000", "http://localhost:5173"]
+    CORS_ORIGINS: Any = ["*"]
 
     @field_validator("CORS_ORIGINS", mode="before")
     @classmethod
